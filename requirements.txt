@@ -1,0 +1,15 @@
+# Google Sheets API
+gspread==6.1.4
+oauth2client==4.1.3
+
+# Google Drive downloader
+gdown==5.2.0
+
+# Progress bar
+tqdm==4.67.1
+
+# Colored console logging
+rich==13.9.4
+
+# Requests (dependency, pinned for stability)
+requests==2.32.3

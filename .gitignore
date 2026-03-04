@@ -1,0 +1,41 @@
+# Temporary files
+temp/
+!temp/.gitkeep
+
+# Output videos
+Output/*.mp4
+!Output/.gitkeep
+
+# Credentials (NEVER commit real keys)
+credentials/*.json
+!credentials/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# PyInstaller
+build/
+dist/
+*.spec
+TikTokBatchFactory.exe
+
+# Fonts (user provides their own)
+fonts/*.ttf
+fonts/*.otf
+!fonts/.gitkeep
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Claude memory (personal)
+CLAUDE.md

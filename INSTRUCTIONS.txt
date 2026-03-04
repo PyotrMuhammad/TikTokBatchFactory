@@ -1,0 +1,361 @@
+================================================================
+     TikTokBatchFactory - Complete Setup & Usage Guide
+     Batch TikTok Video Generator for Windows 10/11
+================================================================
+
+Hello Tiana! Follow these steps carefully, one by one.
+If you get stuck on any step, message me and I'll help.
+
+
+================================================================
+WHAT THIS TOOL DOES
+================================================================
+
+You fill a Google Sheet with 3 columns:
+  - Song URL (Google Drive link)
+  - Video URL (Google Drive link)
+  - Text on screen
+
+You double-click "run.bat" and it:
+  1. Reads your Google Sheet automatically
+  2. Downloads all video and audio files
+  3. Creates vertical TikTok videos (1080x1920)
+  4. Adds your text with your custom font
+  5. Replaces audio with your song
+  6. Uses your NVIDIA GPU for fast rendering
+  7. Saves everything to the Output folder
+  8. Cleans up temporary files automatically
+
+
+================================================================
+STEP 1: INSTALL PYTHON
+================================================================
+
+1. Open this link in your browser:
+   https://www.python.org/downloads/
+
+2. Click the big yellow "Download Python 3.x.x" button
+
+3. Run the downloaded installer
+
+4. VERY IMPORTANT: At the bottom of the installer window,
+   CHECK THE BOX that says "Add Python to PATH"
+   (If you miss this, nothing will work!)
+
+5. Click "Install Now"
+
+6. To verify it worked:
+   - Press Win+R on your keyboard
+   - Type: cmd
+   - Press Enter
+   - In the black window, type: python --version
+   - You should see something like: Python 3.12.x
+   - Close the window
+
+
+================================================================
+STEP 2: INSTALL FFMPEG
+================================================================
+
+1. Open this link:
+   https://www.gyan.dev/ffmpeg/builds/
+
+2. Scroll down to "Release builds"
+
+3. Download "ffmpeg-release-essentials.zip"
+
+4. Extract (unzip) the downloaded file
+
+5. Inside the extracted folder, find the "bin" folder
+   It contains: ffmpeg.exe, ffplay.exe, ffprobe.exe
+
+6. Move the entire extracted folder to C:\ffmpeg
+   (So you should have C:\ffmpeg\bin\ffmpeg.exe)
+
+7. Add FFmpeg to your system PATH:
+   a. Press Win+S (search)
+   b. Type: Environment Variables
+   c. Click "Edit the system environment variables"
+   d. Click the "Environment Variables" button
+   e. Under "System variables", find "Path" and click Edit
+   f. Click "New"
+   g. Type: C:\ffmpeg\bin
+   h. Click OK on all windows
+
+8. To verify it worked:
+   - Open a NEW Command Prompt (Win+R, type cmd, Enter)
+   - Type: ffmpeg -version
+   - You should see version info (not an error)
+
+
+================================================================
+STEP 3: CHECK YOUR NVIDIA GPU
+================================================================
+
+Your computer needs an NVIDIA graphics card (GPU) for fast
+rendering. Most gaming PCs and many laptops have one.
+
+1. Press Win+R, type: cmd, press Enter
+2. Type: nvidia-smi
+3. If you see your GPU name and driver info = you're good!
+
+4. If you get an error, update your NVIDIA drivers:
+   https://www.nvidia.com/drivers
+
+Note: If you don't have an NVIDIA GPU, the tool will still
+work -- it will just use CPU encoding (slower but functional).
+
+
+================================================================
+STEP 4: CREATE GOOGLE SERVICE ACCOUNT (One-time setup)
+================================================================
+
+This lets the tool read your Google Sheet automatically.
+
+1. Go to: https://console.cloud.google.com/
+
+2. Sign in with your Google account
+
+3. At the top, click the project dropdown
+   Click "New Project"
+   Name: TikTokBatchFactory
+   Click "Create"
+
+4. Make sure your new project is selected at the top
+
+5. Enable Google Sheets API:
+   - In the search bar at top, type: Google Sheets API
+   - Click on "Google Sheets API"
+   - Click "Enable"
+
+6. Enable Google Drive API:
+   - In the search bar, type: Google Drive API
+   - Click on "Google Drive API"
+   - Click "Enable"
+
+7. Create Service Account:
+   - In the search bar, type: Service Accounts
+   - Click "Service Accounts" under IAM & Admin
+   - Click "Create Service Account"
+   - Name: tiktok-batch
+   - Click "Create and Continue"
+   - Skip the optional steps (just click "Done")
+
+8. Download the JSON key:
+   - Click on the service account you just created
+   - Click the "Keys" tab
+   - Click "Add Key" > "Create new key"
+   - Select "JSON" and click "Create"
+   - A .json file will download to your computer
+
+9. Move the downloaded .json file to:
+   TikTokBatchFactory\credentials\
+
+   (You can rename it if you want, but then update the
+    filename in config.py -- see CONFIGURATION section below)
+
+IMPORTANT NOTE: If you get an error saying "Service account
+key creation is disabled", try creating the project under
+"No organization" when making a new project, or contact me
+and I'll help you set it up.
+
+
+================================================================
+STEP 5: SETUP YOUR GOOGLE SHEET
+================================================================
+
+1. Go to Google Sheets (sheets.google.com)
+
+2. Create a new blank spreadsheet
+
+3. Name it exactly: TikTokBatchFactory
+   (Click on "Untitled spreadsheet" at top left to rename)
+
+4. In Row 1, type these headers exactly:
+
+   Cell A1: Song URL
+   Cell B1: Video URL
+   Cell C1: Text on screen
+
+5. Starting from Row 2, fill in your data:
+
+   Column A: Paste the Google Drive sharing link for your song/audio
+   Column B: Paste the Google Drive sharing link for your video
+   Column C: Type the text you want on the video
+
+   Example:
+   A2: https://drive.google.com/file/d/abc123/view?usp=sharing
+   B2: https://drive.google.com/file/d/xyz789/view?usp=sharing
+   C2: My First TikTok!
+
+6. Share the sheet with your service account:
+   a. Open your .json file in Notepad
+   b. Find the line that says "client_email"
+   c. Copy that email address (looks like: name@project.iam.gserviceaccount.com)
+   d. In Google Sheets, click "Share" (top right)
+   e. Paste the email address
+   f. Set permission to "Viewer"
+   g. Uncheck "Notify people"
+   h. Click "Share"
+
+
+================================================================
+STEP 6: MAKE YOUR GOOGLE DRIVE FILES ACCESSIBLE
+================================================================
+
+For each video and audio file in Google Drive:
+
+1. Right-click the file in Google Drive
+2. Click "Share"
+3. Under "General access", change to "Anyone with the link"
+4. Set role to "Viewer"
+5. Click "Done"
+6. Click "Copy link" and paste it into your Google Sheet
+
+
+================================================================
+STEP 7: ADD YOUR FONT
+================================================================
+
+1. Choose a .ttf or .otf font file you want to use
+   (Download free fonts from: https://fonts.google.com/)
+
+2. Copy the font file into:
+   TikTokBatchFactory\fonts\
+
+3. The tool will automatically use the first font it finds
+   in that folder
+
+
+================================================================
+STEP 8: INSTALL PYTHON DEPENDENCIES
+================================================================
+
+Double-click: install.bat
+
+This will automatically install all required Python packages.
+Wait for it to finish (you'll see "Installation Complete!").
+
+
+================================================================
+STEP 9: RUN THE TOOL
+================================================================
+
+Double-click: run.bat
+
+That's it! The tool will:
+- Connect to your Google Sheet
+- Download all files
+- Render all videos
+- Save them to the Output folder
+
+Your finished videos will be in:
+TikTokBatchFactory\Output\
+Named: video_001.mp4, video_002.mp4, video_003.mp4, etc.
+
+
+================================================================
+CONFIGURATION (Optional - Customize settings)
+================================================================
+
+Open "config.py" in Notepad to change settings:
+
+SHEET_NAME
+  The exact name of your Google Sheet.
+  Default: "TikTokBatchFactory"
+  Change this if you named your sheet differently.
+
+CREDENTIALS_FILENAME
+  The name of your .json credentials file.
+  Default: "tiktok-488305-2a8205a4c452.json"
+  Change this to match YOUR .json filename.
+
+VIDEO_WIDTH / VIDEO_HEIGHT
+  Video dimensions. Default: 1080 x 1920 (TikTok vertical)
+  Don't change unless you need a different size.
+
+VIDEO_FPS
+  Frames per second. Default: 30
+
+VIDEO_QUALITY
+  Quality level: lower = better quality, bigger file.
+  Default: 23 (good balance)
+  Range: 18 (best quality) to 28 (smallest file)
+
+FONT_SIZE
+  How big the text appears. Default: 54
+  Make it bigger (72) or smaller (36) as needed.
+
+FONT_COLOR
+  Text color. Default: "white"
+  Options: white, yellow, red, blue, green, black, etc.
+
+FONT_BORDER_COLOR
+  Outline color around text. Default: "black"
+  Helps text stand out on any background.
+
+FONT_BORDER_WIDTH
+  Outline thickness. Default: 3
+  Set to 0 for no outline, 5 for thick outline.
+
+TEXT_POSITION_Y
+  Where text sits vertically on the video.
+  Default: 0.55 (slightly below center)
+  0.3 = upper area
+  0.5 = exact center
+  0.55 = slightly below center
+  0.7 = lower third
+  0.85 = near bottom
+
+
+================================================================
+CHANGING YOUR FONT
+================================================================
+
+1. Go to https://fonts.google.com/ (or any font website)
+2. Download a .ttf or .otf font file
+3. Delete the old font from TikTokBatchFactory\fonts\
+4. Put the new font file in TikTokBatchFactory\fonts\
+5. Run the tool again -- it will use the new font
+
+
+================================================================
+TROUBLESHOOTING
+================================================================
+
+Problem: "Python not found"
+Fix: Reinstall Python and make sure "Add to PATH" is checked.
+
+Problem: "FFmpeg not found"
+Fix: Make sure C:\ffmpeg\bin is in your system PATH (Step 2).
+
+Problem: "Sheet not found"
+Fix: Make sure your Google Sheet name matches SHEET_NAME in
+config.py, and that you shared it with the service account.
+
+Problem: "Download failed"
+Fix: Make sure your Google Drive files are set to
+"Anyone with the link" (Step 6).
+
+Problem: "No font found"
+Fix: Place a .ttf or .otf font file in the fonts\ folder.
+
+Problem: Videos are slow to render
+Fix: This is normal without NVIDIA GPU. With GPU it's 3-5x
+faster. Make sure NVIDIA drivers are updated.
+
+Problem: Text looks wrong or has weird characters
+Fix: Make sure you're not using emojis or unusual symbols
+in the "Text on screen" column. Stick to regular letters,
+numbers, and basic punctuation.
+
+
+================================================================
+NEED HELP?
+================================================================
+
+If anything doesn't work or you need changes,
+message me and I'll help you fix it right away.
+
+Enjoy your TikTok videos!
+================================================================
